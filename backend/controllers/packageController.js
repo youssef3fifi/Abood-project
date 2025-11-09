@@ -30,7 +30,9 @@ const getPackages = async (req, res) => {
       if (maxDuration) filter.duration.$lte = Number(maxDuration);
     }
 
-    const packages = await Package.find(filter).sort('-createdAt');
+    let packages = await Package.find(filter);
+    // Sort by most recent first
+    packages.sort((a, b) => b.createdAt - a.createdAt);
 
     res.status(200).json({
       success: true,

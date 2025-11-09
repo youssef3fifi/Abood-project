@@ -72,7 +72,7 @@ const login = async (req, res) => {
     }
 
     // Check for user (include password for comparison)
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }, { select: '+password' });
 
     if (!user) {
       return res.status(401).json({
