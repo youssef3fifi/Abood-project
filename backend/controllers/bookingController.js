@@ -123,7 +123,7 @@ const getMyBookings = async (req, res) => {
 // @access  Private
 const getBooking = async (req, res) => {
   try {
-    const booking = await Booking.findById(req.params.id).populate('package');
+    const booking = await Booking.findById(req.params.id);
 
     if (!booking) {
       return res.status(404).json({
@@ -139,6 +139,9 @@ const getBooking = async (req, res) => {
         message: 'Not authorized to view this booking'
       });
     }
+
+    // Populate package data
+    await booking.populate('package');
 
     res.status(200).json({
       success: true,

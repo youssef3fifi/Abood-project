@@ -1,32 +1,20 @@
 # Quick Start Guide - TravelExplorer
 
-Get the TravelExplorer travel booking system up and running in minutes!
+Get the TravelExplorer travel booking system up and running in **2 MINUTES**!
 
-## ⚡ Quick Local Setup (5 minutes)
+## ⚡ Quick Local Setup (2 minutes!)
 
 ### Prerequisites Check
 ```bash
 node --version  # Should be v14 or higher
-mongod --version  # Should be v4.4 or higher
 ```
 
-If you don't have these installed:
+**That's it!** No database installation required! 🎉
+
+If you don't have Node.js:
 - **Node.js**: Download from [nodejs.org](https://nodejs.org/)
-- **MongoDB**: Download from [mongodb.com/try/download/community](https://www.mongodb.com/try/download/community)
 
-### Step 1: Start MongoDB
-```bash
-# On macOS/Linux
-sudo systemctl start mongod
-# or
-sudo service mongod start
-
-# On Windows
-# MongoDB runs as a service automatically after installation
-# Or start manually: "C:\Program Files\MongoDB\Server\6.0\bin\mongod.exe"
-```
-
-### Step 2: Setup Backend
+### Step 1: Setup Backend
 ```bash
 # Navigate to backend directory
 cd backend
@@ -34,24 +22,22 @@ cd backend
 # Install dependencies (takes ~1 minute)
 npm install
 
-# Copy environment file
-cp .env.example .env
-
-# Edit .env if needed (optional for local testing)
-# nano .env
-
-# Seed database with sample packages
-npm run seed
-
-# Start backend server
+# Start backend server - that's all!
 npm start
 ```
 
 ✅ Backend should now be running at `http://localhost:3000`
 
+The server will automatically:
+- Load 6 sample travel packages
+- Use in-memory storage (no database needed)
+- Be ready to accept requests!
+
+**Note**: Data is stored in memory and will reset when the server restarts.
+
 Test it: Open `http://localhost:3000/api/health` in your browser
 
-### Step 3: Setup Frontend
+### Step 2: Setup Frontend
 ```bash
 # Open a new terminal window
 cd frontend
@@ -70,7 +56,7 @@ npx http-server -p 8080
 
 ✅ Frontend should now be running at `http://localhost:8080`
 
-### Step 4: Test the Application
+### Step 3: Test the Application
 
 1. **Open** `http://localhost:8080` in your browser
 2. **Register** a new account (top right button)
@@ -151,10 +137,10 @@ chmod +x deployment/deploy-frontend.sh
    - Submit your inquiry
 
 ### Sample Test Account
-After seeding the database, you can register your own account. There's no pre-created test account for security reasons.
+You can register your own account. There's no pre-created test account for security reasons.
 
 ### Sample Packages Available
-After running the seed script, you'll have 6 sample packages:
+The server automatically loads 6 sample packages on startup:
 1. Paris Romantic Getaway ($1,299, 5 days)
 2. Bali Beach Paradise ($899, 7 days)
 3. Swiss Alps Adventure ($1,599, 6 days)
@@ -172,12 +158,14 @@ npm start
 # Start with auto-reload (development)
 npm run dev
 
-# Seed/reset database
-npm run seed
-
 # Check server is running
 curl http://localhost:3000/api/health
+
+# Check packages are loaded
+curl http://localhost:3000/api/packages
 ```
+
+**Note**: Data resets when the server restarts (in-memory storage).
 
 ### PM2 (Production)
 ```bash
@@ -194,40 +182,21 @@ pm2 restart travel-backend
 pm2 stop travel-backend
 ```
 
-### MongoDB
+### Viewing Data
+Since this version uses in-memory storage, you can view data through the API:
+
 ```bash
-# Connect to MongoDB shell
-mongosh
-
-# View databases
-show dbs
-
-# Use travel-system database
-use travel-system
-
-# View collections
-show collections
-
 # View all packages
-db.packages.find().pretty()
+curl http://localhost:3000/api/packages
 
-# View all users
-db.users.find().pretty()
+# View a specific package
+curl http://localhost:3000/api/packages/<package-id>
 
-# View all bookings
-db.bookings.find().pretty()
+# View your bookings (requires authentication token)
+curl -H "Authorization: Bearer <your-token>" http://localhost:3000/api/bookings/my-bookings
 ```
 
 ## 🐛 Quick Troubleshooting
-
-### "Cannot connect to MongoDB"
-```bash
-# Check if MongoDB is running
-sudo systemctl status mongod
-
-# Start MongoDB
-sudo systemctl start mongod
-```
 
 ### "Port 3000 already in use"
 ```bash
@@ -262,10 +231,23 @@ sudo chown -R $USER:$USER .
 ## 💡 Tips
 
 1. **Development**: Use `npm run dev` for auto-reload
-2. **Testing**: Use the sample data to test all features
-3. **Security**: Change JWT_SECRET in production
-4. **Performance**: Enable PM2 cluster mode for production
-5. **SSL**: Set up HTTPS with Let's Encrypt for production
+2. **Testing**: Sample packages are automatically loaded on startup
+3. **Security**: Change JWT_SECRET in production (in .env file)
+4. **Data Persistence**: Data resets on server restart (in-memory storage)
+5. **Performance**: Enable PM2 cluster mode for production
+6. **SSL**: Set up HTTPS with Let's Encrypt for production
+
+## 📝 About In-Memory Storage
+
+This version uses **in-memory storage** which means:
+- ✅ No database installation required
+- ✅ Quick setup (2 minutes!)
+- ✅ Perfect for development and testing
+- ✅ Pre-loaded with sample data
+- ⚠️ Data resets when server restarts
+- ⚠️ Not suitable for production without database backup
+
+For production with persistent storage, consider adding a database like MongoDB, PostgreSQL, or MySQL.
 
 ## 🆘 Need Help?
 

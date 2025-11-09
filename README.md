@@ -15,7 +15,8 @@ A professional full-stack travel booking system with modern UI, secure authentic
 
 ### Backend
 - RESTful API architecture with Express.js
-- MongoDB database integration with Mongoose ODM
+- **In-Memory Storage** - No database installation required! Perfect for quick setup and testing
+- Pre-loaded with 6 sample travel packages
 - JWT-based authentication
 - Secure password hashing with bcryptjs
 - Input validation and error handling
@@ -53,8 +54,8 @@ A professional full-stack travel booking system with modern UI, secure authentic
 │   │   ├── bookings.js           # Booking routes
 │   │   ├── contact.js            # Contact routes
 │   │   └── packages.js           # Package routes
-│   ├── seeds/
-│   │   └── seedData.js           # Sample data seeder
+│   ├── utils/
+│   │   └── idGenerator.js        # ID generation utility
 │   ├── .env.example              # Environment variables template
 │   ├── package.json
 │   └── server.js                 # Main server file
@@ -86,10 +87,11 @@ A professional full-stack travel booking system with modern UI, secure authentic
 
 ### Prerequisites
 - Node.js (v14 or higher)
-- MongoDB (v4.4 or higher)
 - npm or yarn
 
-### Local Development Setup
+**Note**: MongoDB is NOT required! This version uses in-memory storage for quick setup.
+
+### Local Development Setup (2 Minutes!)
 
 1. **Clone the repository**
    ```bash
@@ -102,20 +104,21 @@ A professional full-stack travel booking system with modern UI, secure authentic
    cd backend
    npm install
    
-   # Create .env file
+   # Create .env file (optional - has defaults)
    cp .env.example .env
    
-   # Edit .env with your configuration
-   # Set MONGODB_URI, JWT_SECRET, etc.
-   
-   # Seed database with sample data
-   npm run seed
-   
-   # Start server
+   # Start server - that's it!
    npm start
    # or for development with auto-reload:
    npm run dev
    ```
+   
+   The server will automatically:
+   - Start with in-memory storage
+   - Load 6 sample travel packages
+   - Be ready to accept requests immediately!
+   
+   **Note**: All data is stored in memory and will be reset when the server restarts.
 
 3. **Setup Frontend**
    ```bash
@@ -144,23 +147,22 @@ A professional full-stack travel booking system with modern UI, secure authentic
 
 ## 🔐 Environment Variables
 
-Create a `.env` file in the `backend` directory:
+Create a `.env` file in the `backend` directory (optional - the server will work with defaults):
 
 ```env
 # Server Configuration
 PORT=3000
 NODE_ENV=development
 
-# Database
-MONGODB_URI=mongodb://localhost:27017/travel-system
-
 # JWT Authentication
-JWT_SECRET=your-super-secret-jwt-key-change-this
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 JWT_EXPIRE=7d
 
 # CORS (for AWS EC2)
 FRONTEND_URL=*
 ```
+
+**Note**: MongoDB is not required. This version uses in-memory storage by default.
 
 ## 📡 API Endpoints
 
@@ -225,12 +227,12 @@ For detailed AWS deployment instructions, see [AWS-DEPLOYMENT.md](AWS-DEPLOYMENT
 ### Backend
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
-- **MongoDB** - Database
-- **Mongoose** - ODM
+- **In-Memory Storage** - No database required for quick setup!
 - **JWT** - Authentication
 - **bcryptjs** - Password hashing
 - **CORS** - Cross-origin support
 - **dotenv** - Environment variables
+- **Express Rate Limit** - API rate limiting for security
 
 ### Frontend
 - **HTML5** - Structure
@@ -278,20 +280,20 @@ FRONTEND_URL=http://your-frontend-url
 ## 🐛 Troubleshooting
 
 ### Backend won't start
-- Check MongoDB is running: `sudo systemctl status mongod`
-- Verify .env file exists and has correct values
-- Check port 3000 isn't already in use
+- Verify Node.js is installed: `node --version`
+- Check port 3000 isn't already in use: `lsof -i :3000`
+- Ensure all dependencies are installed: `npm install`
 
 ### Frontend can't connect to backend
-- Verify backend is running and accessible
+- Verify backend is running: `curl http://localhost:3000/api/health`
 - Check `frontend/js/config.js` has correct API URL
 - Ensure CORS is configured properly in backend
-- Check EC2 security group allows port 3000
+- Check EC2 security group allows port 3000 (if on AWS)
 
-### Database connection failed
-- Verify MongoDB is running
-- Check MONGODB_URI in .env
-- Ensure database permissions are correct
+### Data is lost after server restart
+- This is expected behavior with in-memory storage
+- Data is stored in RAM and resets when the server stops
+- For persistent storage, consider implementing a database solution
 
 ## 📄 License
 
