@@ -10,8 +10,8 @@ yarn.lock
 .env.local
 .env.production
 
-# Frontend config (contains actual API endpoint)
-frontend/js/config.js
+# Note: frontend/js/config.js is tracked by default with localhost config
+# Users should update it with their EC2 IP for deployment
 
 # IDE and Editor files
 .vscode/
