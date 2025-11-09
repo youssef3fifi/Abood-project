@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Discover amazing travel destinations and book your dream vacation">
+  <title>TravelExplorer - Your Dream Destinations Await</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">✈️</span>
+        TravelExplorer
+      </a>
+      
+      <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+      
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="destinations.html">Destinations</a></li>
+        <li><a href="booking.html">Book Now</a></li>
+        <li><a href="dashboard.html">My Trips</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li id="auth-buttons" class="auth-buttons">
+          <button class="btn btn-secondary" onclick="Modal.open('login-modal')">Login</button>
+          <button class="btn btn-primary" onclick="Modal.open('register-modal')">Sign Up</button>
+        </li>
+        <li id="user-menu" class="user-menu">
+          <span class="user-name"></span>
+          <a href="dashboard.html" class="btn btn-primary">Dashboard</a>
+          <button id="logout-btn" class="btn btn-secondary">Logout</button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content container">
+      <h1>Discover Your Next Adventure</h1>
+      <p>Explore the world's most beautiful destinations with our curated travel packages</p>
+      <div class="hero-buttons">
+        <a href="destinations.html" class="btn btn-accent">Explore Destinations</a>
+        <a href="#features" class="btn btn-secondary">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="section">
+    <div class="container">
+      <h2 class="section-title">Why Choose TravelExplorer</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🌍</div>
+          <h3 class="feature-title">Global Destinations</h3>
+          <p class="feature-description">Access to hundreds of destinations worldwide with carefully curated packages</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3 class="feature-title">Best Prices</h3>
+          <p class="feature-description">Competitive pricing with flexible payment options and special discounts</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3 class="feature-title">Secure Booking</h3>
+          <p class="feature-description">Safe and secure payment processing with instant booking confirmation</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👨‍✈️</div>
+          <h3 class="feature-title">Expert Guides</h3>
+          <p class="feature-description">Professional local guides ensuring authentic and memorable experiences</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Packages Section -->
+  <section class="section" style="background-color: white;">
+    <div class="container">
+      <h2 class="section-title">Featured Destinations</h2>
+      <p class="section-subtitle">Handpicked packages for unforgettable experiences</p>
+      <div id="featured-packages" class="cards-grid">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; text-align: center;">
+    <div class="container">
+      <h2 class="section-title" style="color: white;">Ready to Start Your Journey?</h2>
+      <p style="font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.95;">Join thousands of happy travelers who have discovered the world with us</p>
+      <a href="destinations.html" class="btn btn-accent" style="font-size: 1.125rem; padding: 1rem 2rem;">Browse All Destinations</a>
+    </div>
+  </section>
+
+  <!-- Error/Success Messages -->
+  <div id="error-container" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 3000; min-width: 300px;"></div>
+  <div id="success-container" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 3000; min-width: 300px;"></div>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h2 class="modal-title">Login to Your Account</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" id="login-email" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" id="login-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+      </form>
+      <p style="text-align: center; margin-top: 1rem; color: var(--text-light);">
+        Don't have an account? <a href="#" onclick="Modal.close('login-modal'); Modal.open('register-modal');" style="color: var(--primary-color);">Sign up</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="register-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h2 class="modal-title">Create Your Account</h2>
+      <form id="register-form">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="register-name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" id="register-email" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" id="register-password" required minlength="6">
+          <small class="form-error">Password must be at least 6 characters</small>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone (optional)</label>
+          <input type="tel" class="form-control" id="register-phone">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+      </form>
+      <p style="text-align: center; margin-top: 1rem; color: var(--text-light);">
+        Already have an account? <a href="#" onclick="Modal.close('register-modal'); Modal.open('login-modal');" style="color: var(--primary-color);">Login</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>TravelExplorer</h3>
+          <p>Your trusted partner for unforgettable travel experiences around the world.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook">📘</a>
+            <a href="#" aria-label="Twitter">🐦</a>
+            <a href="#" aria-label="Instagram">📷</a>
+            <a href="#" aria-label="LinkedIn">💼</a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <a href="index.html">Home</a>
+          <a href="destinations.html">Destinations</a>
+          <a href="booking.html">Book Now</a>
+          <a href="dashboard.html">My Trips</a>
+        </div>
+        <div class="footer-section">
+          <h3>Support</h3>
+          <a href="contact.html">Contact Us</a>
+          <a href="#">FAQ</a>
+          <a href="#">Terms & Conditions</a>
+          <a href="#">Privacy Policy</a>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Info</h3>
+          <p>📧 info@travelexplorer.com</p>
+          <p>📞 +1 (555) 123-4567</p>
+          <p>📍 123 Travel St, Adventure City</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 TravelExplorer. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to top button -->
+  <button id="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Load featured packages
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await API.packages.getAll();
+        const packages = response.data.slice(0, 6); // Show first 6
+        const container = document.getElementById('featured-packages');
+        
+        if (packages.length === 0) {
+          container.innerHTML = '<div class="empty-state"><p>No packages available</p></div>';
+          return;
+        }
+
+        container.innerHTML = packages.map(pkg => `
+          <div class="card">
+            <img src="${pkg.images[0] || 'https://via.placeholder.com/400x200'}" alt="${pkg.name}" class="card-image" onerror="this.src='https://via.placeholder.com/400x200?text=Travel+Image'">
+            <div class="card-content">
+              <h3 class="card-title">${pkg.name}</h3>
+              <p class="card-text">${pkg.description.substring(0, 100)}...</p>
+              <div class="card-footer">
+                <div>
+                  <div class="card-price">${Utils.formatPrice(pkg.price)}</div>
+                  <div class="card-duration">${pkg.duration} days</div>
+                </div>
+                <a href="booking.html?package=${pkg._id}" class="btn btn-primary">Book Now</a>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading packages:', error);
+        document.getElementById('featured-packages').innerHTML = 
+          '<div class="empty-state"><p>Unable to load packages. Please try again later.</p></div>';
+      }
+    });
+
+    // Login form handler
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      try {
+        const response = await API.auth.login({ email, password });
+        Auth.saveUser(response.data);
+        Modal.close('login-modal');
+        Utils.showSuccess('Login successful! Welcome back.');
+        Auth.updateNavigation();
+      } catch (error) {
+        Utils.showError(error.message || 'Login failed. Please check your credentials.');
+      }
+    });
+
+    // Register form handler
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('register-name').value;
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const phone = document.getElementById('register-phone').value;
+
+      if (password.length < 6) {
+        Utils.showError('Password must be at least 6 characters');
+        return;
+      }
+
+      try {
+        const response = await API.auth.register({ name, email, password, phone });
+        Auth.saveUser(response.data);
+        Modal.close('register-modal');
+        Utils.showSuccess('Registration successful! Welcome to TravelExplorer.');
+        Auth.updateNavigation();
+      } catch (error) {
+        Utils.showError(error.message || 'Registration failed. Please try again.');
+      }
+    });
+  </script>
+</body>
+</html>

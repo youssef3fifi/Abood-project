@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse our curated travel packages and destinations">
+  <title>Destinations - TravelExplorer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">✈️</span>
+        TravelExplorer
+      </a>
+      
+      <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+      
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="destinations.html">Destinations</a></li>
+        <li><a href="booking.html">Book Now</a></li>
+        <li><a href="dashboard.html">My Trips</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li id="auth-buttons" class="auth-buttons">
+          <button class="btn btn-secondary" onclick="Modal.open('login-modal')">Login</button>
+          <button class="btn btn-primary" onclick="Modal.open('register-modal')">Sign Up</button>
+        </li>
+        <li id="user-menu" class="user-menu">
+          <span class="user-name"></span>
+          <a href="dashboard.html" class="btn btn-primary">Dashboard</a>
+          <button id="logout-btn" class="btn btn-secondary">Logout</button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <section class="hero" style="padding: 3rem 0;">
+    <div class="hero-content container">
+      <h1>Explore Our Destinations</h1>
+      <p>Find your perfect travel package from our curated collection</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="section">
+    <div class="container">
+      <!-- Filters -->
+      <div class="filters">
+        <h3 style="margin-bottom: 1.5rem; color: var(--text-dark);">Filter Packages</h3>
+        <div class="filters-grid">
+          <div class="form-group">
+            <label class="form-label">Destination</label>
+            <input type="text" id="filter-destination" class="form-control" placeholder="e.g., Paris, Bali">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="filter-category" class="form-control">
+              <option value="">All Categories</option>
+              <option value="adventure">Adventure</option>
+              <option value="relaxation">Relaxation</option>
+              <option value="cultural">Cultural</option>
+              <option value="family">Family</option>
+              <option value="luxury">Luxury</option>
+              <option value="budget">Budget</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Max Price ($)</label>
+            <input type="number" id="filter-price" class="form-control" placeholder="e.g., 1000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration (days)</label>
+            <input type="number" id="filter-duration" class="form-control" placeholder="e.g., 7">
+          </div>
+        </div>
+        <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+          <button id="apply-filters" class="btn btn-primary">Apply Filters</button>
+          <button id="clear-filters" class="btn btn-secondary">Clear Filters</button>
+        </div>
+      </div>
+
+      <!-- Packages Grid -->
+      <div style="margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h2 id="results-count">Loading packages...</h2>
+          <select id="sort-by" class="form-control" style="width: auto;">
+            <option value="">Sort By</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="duration-asc">Duration: Short to Long</option>
+            <option value="duration-desc">Duration: Long to Short</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+        
+        <div id="packages-grid" class="cards-grid">
+          <div class="loading-spinner"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Error/Success Messages -->
+  <div id="error-container" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 3000; min-width: 300px;"></div>
+  <div id="success-container" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 3000; min-width: 300px;"></div>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h2 class="modal-title">Login to Your Account</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" id="login-email" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" id="login-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+      </form>
+      <p style="text-align: center; margin-top: 1rem; color: var(--text-light);">
+        Don't have an account? <a href="#" onclick="Modal.close('login-modal'); Modal.open('register-modal');" style="color: var(--primary-color);">Sign up</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="register-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h2 class="modal-title">Create Your Account</h2>
+      <form id="register-form">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="register-name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" id="register-email" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" id="register-password" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone (optional)</label>
+          <input type="tel" class="form-control" id="register-phone">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+      </form>
+      <p style="text-align: center; margin-top: 1rem; color: var(--text-light);">
+        Already have an account? <a href="#" onclick="Modal.close('register-modal'); Modal.open('login-modal');" style="color: var(--primary-color);">Login</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>TravelExplorer</h3>
+          <p>Your trusted partner for unforgettable travel experiences around the world.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook">📘</a>
+            <a href="#" aria-label="Twitter">🐦</a>
+            <a href="#" aria-label="Instagram">📷</a>
+            <a href="#" aria-label="LinkedIn">💼</a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <a href="index.html">Home</a>
+          <a href="destinations.html">Destinations</a>
+          <a href="booking.html">Book Now</a>
+          <a href="dashboard.html">My Trips</a>
+        </div>
+        <div class="footer-section">
+          <h3>Support</h3>
+          <a href="contact.html">Contact Us</a>
+          <a href="#">FAQ</a>
+          <a href="#">Terms & Conditions</a>
+          <a href="#">Privacy Policy</a>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Info</h3>
+          <p>📧 info@travelexplorer.com</p>
+          <p>📞 +1 (555) 123-4567</p>
+          <p>📍 123 Travel St, Adventure City</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 TravelExplorer. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to top button -->
+  <button id="scroll-top-btn" aria-label="Scroll to top">↑</button>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    let allPackages = [];
+
+    // Load all packages
+    async function loadPackages() {
+      try {
+        const response = await API.packages.getAll();
+        allPackages = response.data;
+        displayPackages(allPackages);
+      } catch (error) {
+        console.error('Error loading packages:', error);
+        document.getElementById('packages-grid').innerHTML = 
+          '<div class="empty-state"><div class="empty-state-icon">😔</div><h3 class="empty-state-title">Unable to Load Packages</h3><p class="empty-state-text">Please try again later.</p></div>';
+      }
+    }
+
+    // Display packages
+    function displayPackages(packages) {
+      const container = document.getElementById('packages-grid');
+      const countEl = document.getElementById('results-count');
+      
+      countEl.textContent = `${packages.length} Package${packages.length !== 1 ? 's' : ''} Found`;
+
+      if (packages.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><h3 class="empty-state-title">No Packages Found</h3><p class="empty-state-text">Try adjusting your filters</p></div>';
+        return;
+      }
+
+      container.innerHTML = packages.map(pkg => `
+        <div class="card">
+          <img src="${pkg.images[0] || 'https://via.placeholder.com/400x200'}" alt="${pkg.name}" class="card-image" onerror="this.src='https://via.placeholder.com/400x200?text=Travel+Image'">
+          <div class="card-content">
+            <div style="margin-bottom: 0.5rem;">
+              <span class="badge badge-primary">${pkg.category}</span>
+              ${pkg.rating ? `<span style="color: var(--accent-color); margin-left: 0.5rem;">★ ${pkg.rating}</span>` : ''}
+            </div>
+            <h3 class="card-title">${pkg.name}</h3>
+            <p style="color: var(--text-light); margin-bottom: 0.5rem;">📍 ${pkg.destination}</p>
+            <p class="card-text">${pkg.description.substring(0, 120)}...</p>
+            <div class="card-footer">
+              <div>
+                <div class="card-price">${Utils.formatPrice(pkg.price)}</div>
+                <div class="card-duration">${pkg.duration} days • Up to ${pkg.maxPeople} people</div>
+              </div>
+              <a href="booking.html?package=${pkg._id}" class="btn btn-primary">Book Now</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Apply filters
+    function applyFilters() {
+      const destination = document.getElementById('filter-destination').value.toLowerCase();
+      const category = document.getElementById('filter-category').value;
+      const maxPrice = document.getElementById('filter-price').value;
+      const maxDuration = document.getElementById('filter-duration').value;
+
+      let filtered = allPackages.filter(pkg => {
+        if (destination && !pkg.destination.toLowerCase().includes(destination)) return false;
+        if (category && pkg.category !== category) return false;
+        if (maxPrice && pkg.price > Number(maxPrice)) return false;
+        if (maxDuration && pkg.duration > Number(maxDuration)) return false;
+        return true;
+      });
+
+      displayPackages(filtered);
+    }
+
+    // Sort packages
+    function sortPackages() {
+      const sortBy = document.getElementById('sort-by').value;
+      let sorted = [...allPackages];
+
+      switch(sortBy) {
+        case 'price-asc':
+          sorted.sort((a, b) => a.price - b.price);
+          break;
+        case 'price-desc':
+          sorted.sort((a, b) => b.price - a.price);
+          break;
+        case 'duration-asc':
+          sorted.sort((a, b) => a.duration - b.duration);
+          break;
+        case 'duration-desc':
+          sorted.sort((a, b) => b.duration - a.duration);
+          break;
+        case 'rating':
+          sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+          break;
+      }
+
+      allPackages = sorted;
+      applyFilters();
+    }
+
+    // Clear filters
+    function clearFilters() {
+      document.getElementById('filter-destination').value = '';
+      document.getElementById('filter-category').value = '';
+      document.getElementById('filter-price').value = '';
+      document.getElementById('filter-duration').value = '';
+      document.getElementById('sort-by').value = '';
+      displayPackages(allPackages);
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPackages();
+      
+      document.getElementById('apply-filters').addEventListener('click', applyFilters);
+      document.getElementById('clear-filters').addEventListener('click', clearFilters);
+      document.getElementById('sort-by').addEventListener('change', sortPackages);
+    });
+
+    // Login form handler
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      try {
+        const response = await API.auth.login({ email, password });
+        Auth.saveUser(response.data);
+        Modal.close('login-modal');
+        Utils.showSuccess('Login successful!');
+        Auth.updateNavigation();
+      } catch (error) {
+        Utils.showError(error.message || 'Login failed.');
+      }
+    });
+
+    // Register form handler
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('register-name').value;
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const phone = document.getElementById('register-phone').value;
+      try {
+        const response = await API.auth.register({ name, email, password, phone });
+        Auth.saveUser(response.data);
+        Modal.close('register-modal');
+        Utils.showSuccess('Registration successful!');
+        Auth.updateNavigation();
+      } catch (error) {
+        Utils.showError(error.message || 'Registration failed.');
+      }
+    });
+  </script>
+</body>
+</html>

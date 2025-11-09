@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage your bookings and profile">
+  <title>My Dashboard - TravelExplorer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">✈️</span>
+        TravelExplorer
+      </a>
+      
+      <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+      
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="destinations.html">Destinations</a></li>
+        <li><a href="booking.html">Book Now</a></li>
+        <li><a href="dashboard.html">My Trips</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li id="user-menu" class="user-menu">
+          <span class="user-name"></span>
+          <button id="logout-btn" class="btn btn-secondary">Logout</button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <section class="hero" style="padding: 3rem 0;">
+    <div class="hero-content container">
+      <h1>My Dashboard</h1>
+      <p>Manage your bookings and profile</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="section">
+    <div class="container">
+      <!-- Dashboard Tabs -->
+      <div style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); overflow-x: auto;">
+        <button class="tab-btn active" data-tab="bookings" style="padding: 1rem 1.5rem; background: none; border: none; border-bottom: 3px solid var(--primary-color); color: var(--primary-color); font-weight: 600; cursor: pointer; white-space: nowrap;">
+          My Bookings
+        </button>
+        <button class="tab-btn" data-tab="profile" style="padding: 1rem 1.5rem; background: none; border: none; border-bottom: 3px solid transparent; color: var(--text-light); font-weight: 600; cursor: pointer; white-space: nowrap;">
+          Profile
+        </button>
+      </div>
+
+      <!-- Bookings Tab -->
+      <div id="bookings-tab" class="tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h2 style="margin: 0;">My Bookings</h2>
+          <a href="booking.html" class="btn btn-primary">Book New Trip</a>
+        </div>
+
+        <div id="bookings-container">
+          <div class="loading-spinner"></div>
+        </div>
+      </div>
+
+      <!-- Profile Tab -->
+      <div id="profile-tab" class="tab-content" style="display: none;">
+        <div style="max-width: 600px;">
+          <h2 style="margin-bottom: 1.5rem;">My Profile</h2>
+          
+          <div style="background: white; padding: 2rem; border-radius: 0.75rem; box-shadow: var(--shadow-md);">
+            <form id="profile-form">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="profile-name" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" id="profile-email" class="form-control" disabled>
+                <small style="color: var(--text-light);">Email cannot be changed</small>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input type="tel" id="profile-phone" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Address</label>
+                <textarea id="profile-address" class="form-control" rows="3"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Error/Success Messages -->
+  <div id="error-container" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 3000; min-width: 300px; max-width: 500px;"></div>
+  <div id="success-container" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 3000; min-width: 300px; max-width: 500px;"></div>
+
+  <!-- Booking Details Modal -->
+  <div id="booking-details-modal" class="modal">
+    <div class="modal-content" style="max-width: 700px;">
+      <button class="modal-close">×</button>
+      <h2 class="modal-title">Booking Details</h2>
+      <div id="booking-details-content"></div>
+    </div>
+  </div>
+
+  <!-- Cancel Confirmation Modal -->
+  <div id="cancel-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h2 class="modal-title">Cancel Booking</h2>
+      <p style="color: var(--text-light); margin-bottom: 2rem;">Are you sure you want to cancel this booking? This action cannot be undone.</p>
+      <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+        <button class="btn btn-secondary" onclick="Modal.close('cancel-modal')">Keep Booking</button>
+        <button id="confirm-cancel-btn" class="btn" style="background-color: var(--error-color); color: white;">Yes, Cancel Booking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>TravelExplorer</h3>
+          <p>Your trusted partner for unforgettable travel experiences.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <a href="index.html">Home</a>
+          <a href="destinations.html">Destinations</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Info</h3>
+          <p>📧 info@travelexplorer.com</p>
+          <p>📞 +1 (555) 123-4567</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 TravelExplorer. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Protect page - require login
+    Auth.requireAuth();
+
+    let currentBookingToCancel = null;
+
+    // Load bookings
+    async function loadBookings() {
+      try {
+        const response = await API.bookings.getMyBookings();
+        const bookings = response.data;
+        const container = document.getElementById('bookings-container');
+
+        if (bookings.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">📅</div>
+              <h3 class="empty-state-title">No Bookings Yet</h3>
+              <p class="empty-state-text">Start your adventure by booking your first trip!</p>
+              <a href="booking.html" class="btn btn-primary" style="margin-top: 1rem;">Browse Packages</a>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = bookings.map(booking => {
+          const statusColors = {
+            pending: 'badge-warning',
+            confirmed: 'badge-success',
+            cancelled: 'badge-error',
+            completed: 'badge-primary'
+          };
+
+          return `
+            <div class="card" style="margin-bottom: 1.5rem;">
+              <div class="card-content" style="padding: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                  <div style="flex: 1;">
+                    <h3 style="margin-bottom: 0.5rem; color: var(--text-dark);">${booking.package.name}</h3>
+                    <p style="color: var(--text-light); margin-bottom: 0.5rem;">📍 ${booking.package.destination}</p>
+                    <span class="badge ${statusColors[booking.status]}">${booking.status.toUpperCase()}</span>
+                  </div>
+                  <img src="${booking.package.images[0] || 'https://via.placeholder.com/150x100'}" 
+                       alt="${booking.package.name}" 
+                       style="width: 150px; height: 100px; object-fit: cover; border-radius: 0.5rem;"
+                       onerror="this.src='https://via.placeholder.com/150x100?text=Travel'">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                  <div>
+                    <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.25rem;">Start Date</p>
+                    <p style="font-weight: 500;">${Utils.formatDate(booking.startDate)}</p>
+                  </div>
+                  <div>
+                    <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.25rem;">Travelers</p>
+                    <p style="font-weight: 500;">${booking.numberOfPeople} ${booking.numberOfPeople > 1 ? 'people' : 'person'}</p>
+                  </div>
+                  <div>
+                    <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.25rem;">Duration</p>
+                    <p style="font-weight: 500;">${booking.package.duration} days</p>
+                  </div>
+                  <div>
+                    <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.25rem;">Total Price</p>
+                    <p style="font-weight: 700; color: var(--primary-color); font-size: 1.25rem;">${Utils.formatPrice(booking.totalPrice)}</p>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                  <button class="btn btn-primary" onclick="viewBookingDetails('${booking._id}')">View Details</button>
+                  ${booking.status === 'pending' || booking.status === 'confirmed' ? 
+                    `<button class="btn btn-secondary" onclick="cancelBooking('${booking._id}')">Cancel Booking</button>` : 
+                    ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      } catch (error) {
+        console.error('Error loading bookings:', error);
+        document.getElementById('bookings-container').innerHTML = 
+          '<div class="empty-state"><p>Unable to load bookings. Please try again later.</p></div>';
+      }
+    }
+
+    // View booking details
+    async function viewBookingDetails(bookingId) {
+      try {
+        const response = await API.bookings.getById(bookingId);
+        const booking = response.data;
+        
+        const content = `
+          <div style="display: grid; gap: 1.5rem;">
+            <div>
+              <img src="${booking.package.images[0] || 'https://via.placeholder.com/600x300'}" 
+                   alt="${booking.package.name}" 
+                   style="width: 100%; height: 250px; object-fit: cover; border-radius: 0.5rem;"
+                   onerror="this.src='https://via.placeholder.com/600x300?text=Travel+Package'">
+            </div>
+            
+            <div>
+              <h3 style="color: var(--text-dark); margin-bottom: 0.5rem;">${booking.package.name}</h3>
+              <p style="color: var(--text-light);">📍 ${booking.package.destination}</p>
+              <p style="margin-top: 1rem;">${booking.package.description}</p>
+            </div>
+
+            <div style="background: var(--bg-light); padding: 1.5rem; border-radius: 0.5rem;">
+              <h4 style="margin-bottom: 1rem; color: var(--text-dark);">Booking Information</h4>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <div>
+                  <p style="color: var(--text-light); font-size: 0.875rem;">Booking ID</p>
+                  <p style="font-weight: 500;">${booking._id}</p>
+                </div>
+                <div>
+                  <p style="color: var(--text-light); font-size: 0.875rem;">Status</p>
+                  <p style="font-weight: 500;">${booking.status.toUpperCase()}</p>
+                </div>
+                <div>
+                  <p style="color: var(--text-light); font-size: 0.875rem;">Start Date</p>
+                  <p style="font-weight: 500;">${Utils.formatDate(booking.startDate)}</p>
+                </div>
+                <div>
+                  <p style="color: var(--text-light); font-size: 0.875rem;">Number of Travelers</p>
+                  <p style="font-weight: 500;">${booking.numberOfPeople}</p>
+                </div>
+                <div>
+                  <p style="color: var(--text-light); font-size: 0.875rem;">Contact Phone</p>
+                  <p style="font-weight: 500;">${booking.contactPhone}</p>
+                </div>
+                <div>
+                  <p style="color: var(--text-light); font-size: 0.875rem;">Contact Email</p>
+                  <p style="font-weight: 500;">${booking.contactEmail}</p>
+                </div>
+              </div>
+            </div>
+
+            ${booking.specialRequests ? `
+              <div>
+                <h4 style="margin-bottom: 0.5rem; color: var(--text-dark);">Special Requests</h4>
+                <p style="color: var(--text-light);">${booking.specialRequests}</p>
+              </div>
+            ` : ''}
+
+            <div style="padding-top: 1rem; border-top: 2px solid var(--border-color);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 1.25rem; font-weight: 600;">Total Amount:</span>
+                <span style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">${Utils.formatPrice(booking.totalPrice)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('booking-details-content').innerHTML = content;
+        Modal.open('booking-details-modal');
+      } catch (error) {
+        Utils.showError('Unable to load booking details');
+      }
+    }
+
+    // Cancel booking
+    function cancelBooking(bookingId) {
+      currentBookingToCancel = bookingId;
+      Modal.open('cancel-modal');
+    }
+
+    // Confirm cancel
+    document.getElementById('confirm-cancel-btn').addEventListener('click', async () => {
+      if (!currentBookingToCancel) return;
+
+      try {
+        await API.bookings.cancel(currentBookingToCancel);
+        Modal.close('cancel-modal');
+        Utils.showSuccess('Booking cancelled successfully');
+        loadBookings();
+        currentBookingToCancel = null;
+      } catch (error) {
+        Utils.showError(error.message || 'Unable to cancel booking');
+      }
+    });
+
+    // Load profile data
+    function loadProfile() {
+      const user = Auth.getUser();
+      if (user) {
+        document.getElementById('profile-name').value = user.name || '';
+        document.getElementById('profile-email').value = user.email || '';
+        document.getElementById('profile-phone').value = user.phone || '';
+        document.getElementById('profile-address').value = user.address || '';
+      }
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        
+        // Update buttons
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('active');
+          b.style.borderBottom = '3px solid transparent';
+          b.style.color = 'var(--text-light)';
+        });
+        btn.classList.add('active');
+        btn.style.borderBottom = '3px solid var(--primary-color)';
+        btn.style.color = 'var(--primary-color)';
+        
+        // Update content
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.style.display = 'none';
+        });
+        document.getElementById(tab + '-tab').style.display = 'block';
+
+        if (tab === 'profile') {
+          loadProfile();
+        }
+      });
+    });
+
+    // Profile form submission
+    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      Utils.showSuccess('Profile update feature coming soon!');
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBookings();
+    });
+  </script>
+</body>
+</html>
