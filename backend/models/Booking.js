@@ -87,27 +87,81 @@ class Booking {
   }
 }
 
+// Helper class for query chaining
+class BookingQuery {
+  constructor(filter = {}) {
+    this.filter = filter;
+    this._populateField = null;
+    this._sortField = null;
+  }
+
+  populate(field) {
+    this._populateField = field;
+    return this;
+  }
+
+  sort(sortStr) {
+    this._sortField = sortStr;
+    return this;
+  }
+
+  async exec() {
+    // Filter bookings
+    let results = [...bookings];
+
+    if (this.filter.user) {
+      results = results.filter(b => b.user.toString() === this.filter.user.toString());
+    }
+
+    if (this.filter.package) {
+      results = results.filter(b => b.package.toString() === this.filter.package.toString());
+    }
+
+    if (this.filter.status) {
+      results = results.filter(b => b.status === this.filter.status);
+    }
+
+    // Populate if requested
+    if (this._populateField === 'package') {
+      for (const booking of results) {
+        await booking.populate('package');
+      }
+    }
+
+    // Sort if requested
+    if (this._sortField === '-createdAt') {
+      results.sort((a, b) => b.createdAt - a.createdAt);
+    } else if (this._sortField === 'createdAt') {
+      results.sort((a, b) => a.createdAt - b.createdAt);
+    }
+
+    return results;
+  }
+
+  // Make query thenable (for await)
+  then(resolve, reject) {
+    return this.exec().then(resolve, reject);
+  }
+}
+
 // Static methods for CRUD operations
-Booking.find = async (filter = {}) => {
-  let results = [...bookings];
-
-  if (filter.user) {
-    results = results.filter(b => b.user.toString() === filter.user.toString());
-  }
-
-  if (filter.package) {
-    results = results.filter(b => b.package.toString() === filter.package.toString());
-  }
-
-  if (filter.status) {
-    results = results.filter(b => b.status === filter.status);
-  }
-
-  return results;
+Booking.find = (filter = {}) => {
+  return new BookingQuery(filter);
 };
 
 Booking.findById = async (id) => {
-  return bookings.find(b => b._id === id) || null;
+  const booking = bookings.find(b => b._id === id) || null;
+  if (!booking) return null;
+  
+  // Return an object that supports populate
+  return {
+    ...booking,
+    _originalBooking: booking,
+    populate: async function(field) {
+      await booking.populate(field);
+      return booking;
+    }
+  };
 };
 
 Booking.create = async (data) => {
@@ -115,58 +169,6 @@ Booking.create = async (data) => {
   booking.validate();
   bookings.push(booking);
   return booking;
-};
-
-// Helper methods for mongoose-style chaining
-const createQueryChain = (results) => {
-  return {
-    _results: results,
-    populate: async function(field) {
-      if (field === 'package') {
-        for (const booking of this._results) {
-          await booking.populate('package');
-        }
-      }
-      return this;
-    },
-    sort: function(sortStr) {
-      if (sortStr === '-createdAt') {
-        this._results.sort((a, b) => b.createdAt - a.createdAt);
-      } else if (sortStr === 'createdAt') {
-        this._results.sort((a, b) => a.createdAt - b.createdAt);
-      }
-      return this._results;
-    }
-  };
-};
-
-// Override find to support chaining
-const originalFind = Booking.find;
-Booking.find = async (filter = {}) => {
-  const results = await originalFind(filter);
-  const chain = createQueryChain(results);
-  
-  // Make chain then-able for await
-  chain.then = async function(resolve) {
-    return resolve(this._results);
-  };
-  
-  return chain;
-};
-
-// Override findById to support chaining
-const originalFindById = Booking.findById;
-Booking.findById = async (id) => {
-  const booking = await originalFindById(id);
-  if (!booking) return null;
-  
-  return {
-    ...booking,
-    populate: async function(field) {
-      await booking.populate(field);
-      return booking;
-    }
-  };
 };
 
 // Get all bookings (for internal use)
