@@ -1,0 +1,196 @@
+/* Responsive Design for Mobile and Tablet */
+
+/* Tablet and below */
+@media (max-width: 768px) {
+  /* Navigation */
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 70px;
+    left: -100%;
+    width: 100%;
+    background-color: var(--bg-white);
+    flex-direction: column;
+    gap: 0;
+    padding: 1rem 0;
+    box-shadow: var(--shadow-md);
+    transition: left 0.3s ease;
+  }
+
+  .nav-links.active {
+    left: 0;
+  }
+
+  .nav-links li {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .auth-buttons {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .auth-buttons .btn {
+    width: 100%;
+  }
+
+  /* Hero */
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    padding: 0 1rem;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+  }
+
+  /* Sections */
+  .section {
+    padding: 2rem 0;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  /* Cards */
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Package Details */
+  .package-details {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+
+  /* Filters */
+  .filters {
+    padding: 1.5rem;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Footer */
+  .footer-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .social-links {
+    justify-content: center;
+  }
+
+  /* Modal */
+  .modal-content {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  /* Scroll to top button */
+  #scroll-top-btn {
+    bottom: 1rem;
+    right: 1rem;
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* Mobile only */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .hero {
+    padding: 4rem 0;
+  }
+
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero p {
+    font-size: 0.875rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .card-content {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+  }
+
+  .card-price {
+    font-size: 1.25rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+
+  .feature-icon {
+    font-size: 2.5rem;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+
+  .hero h1 {
+    font-size: 3.5rem;
+  }
+
+  .section-title {
+    font-size: 3rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .navbar,
+  .footer,
+  #scroll-top-btn,
+  .btn,
+  .modal {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+  }
+
+  .section {
+    page-break-inside: avoid;
+  }
+}
