@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book your travel package">
+  <title>Book Your Trip - TravelExplorer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">✈️</span>
+        TravelExplorer
+      </a>
+      
+      <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+      
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="destinations.html">Destinations</a></li>
+        <li><a href="booking.html">Book Now</a></li>
+        <li><a href="dashboard.html">My Trips</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li id="auth-buttons" class="auth-buttons">
+          <button class="btn btn-secondary" onclick="Modal.open('login-modal')">Login</button>
+          <button class="btn btn-primary" onclick="Modal.open('register-modal')">Sign Up</button>
+        </li>
+        <li id="user-menu" class="user-menu">
+          <span class="user-name"></span>
+          <a href="dashboard.html" class="btn btn-primary">Dashboard</a>
+          <button id="logout-btn" class="btn btn-secondary">Logout</button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <section class="hero" style="padding: 3rem 0;">
+    <div class="hero-content container">
+      <h1>Book Your Dream Trip</h1>
+      <p>Complete your booking in just a few simple steps</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="section">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem; align-items: start;">
+        
+        <!-- Booking Form -->
+        <div style="background: white; padding: 2rem; border-radius: 0.75rem; box-shadow: var(--shadow-md);">
+          <h2 style="margin-bottom: 1.5rem;">Booking Details</h2>
+          
+          <form id="booking-form">
+            <!-- Package Selection -->
+            <div class="form-group">
+              <label class="form-label">Select Package</label>
+              <select id="package-select" class="form-control" required>
+                <option value="">Loading packages...</option>
+              </select>
+            </div>
+
+            <!-- Travel Dates -->
+            <div class="form-group">
+              <label class="form-label">Start Date</label>
+              <input type="date" id="start-date" class="form-control" required>
+            </div>
+
+            <!-- Number of Travelers -->
+            <div class="form-group">
+              <label class="form-label">Number of Travelers</label>
+              <input type="number" id="num-people" class="form-control" min="1" value="1" required>
+              <small id="max-people-hint" class="form-error" style="display: none;">Maximum allowed travelers will be shown after selecting a package</small>
+            </div>
+
+            <!-- Contact Information -->
+            <h3 style="margin: 2rem 0 1rem; color: var(--text-dark);">Contact Information</h3>
+            
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" id="contact-name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" id="contact-email" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" id="contact-phone" class="form-control" required>
+            </div>
+
+            <!-- Special Requests -->
+            <div class="form-group">
+              <label class="form-label">Special Requests (Optional)</label>
+              <textarea id="special-requests" class="form-control" rows="4" placeholder="Any special requirements or requests..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" style="font-size: 1.125rem; padding: 1rem;">
+              Complete Booking
+            </button>
+          </form>
+        </div>
+
+        <!-- Booking Summary -->
+        <div style="position: sticky; top: 90px;">
+          <div style="background: white; padding: 2rem; border-radius: 0.75rem; box-shadow: var(--shadow-md);">
+            <h3 style="margin-bottom: 1.5rem;">Booking Summary</h3>
+            
+            <div id="package-summary" style="display: none;">
+              <div id="package-image" style="width: 100%; height: 200px; border-radius: 0.5rem; background-size: cover; background-position: center; margin-bottom: 1rem;"></div>
+              
+              <h4 id="summary-package-name" style="margin-bottom: 0.5rem; color: var(--text-dark);"></h4>
+              <p id="summary-destination" style="color: var(--text-light); margin-bottom: 1rem;"></p>
+              
+              <div style="border-top: 2px solid var(--border-color); padding-top: 1rem; margin-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                  <span style="color: var(--text-light);">Duration:</span>
+                  <span id="summary-duration" style="font-weight: 500;"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                  <span style="color: var(--text-light);">Price per person:</span>
+                  <span id="summary-price-per-person" style="font-weight: 500;"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                  <span style="color: var(--text-light);">Number of travelers:</span>
+                  <span id="summary-travelers" style="font-weight: 500;">1</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                  <span style="color: var(--text-light);">Start date:</span>
+                  <span id="summary-date" style="font-weight: 500;">Not selected</span>
+                </div>
+              </div>
+              
+              <div style="border-top: 2px solid var(--border-color); padding-top: 1rem; margin-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 1.25rem; font-weight: 600;">Total:</span>
+                  <span id="summary-total" style="font-size: 1.75rem; font-weight: 700; color: var(--primary-color);"></span>
+                </div>
+              </div>
+            </div>
+
+            <div id="no-package-selected" style="text-align: center; padding: 2rem 0; color: var(--text-light);">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
+              <p>Select a package to see booking summary</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Error/Success Messages -->
+  <div id="error-container" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 3000; min-width: 300px; max-width: 500px;"></div>
+  <div id="success-container" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 3000; min-width: 300px; max-width: 500px;"></div>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h2 class="modal-title">Login to Book</h2>
+      <p style="color: var(--text-light); margin-bottom: 1.5rem;">Please login to continue with your booking</p>
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" id="login-email" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" id="login-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+      </form>
+      <p style="text-align: center; margin-top: 1rem; color: var(--text-light);">
+        Don't have an account? <a href="#" onclick="Modal.close('login-modal'); Modal.open('register-modal');" style="color: var(--primary-color);">Sign up</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="register-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h2 class="modal-title">Create Your Account</h2>
+      <form id="register-form">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="register-name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" id="register-email" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" id="register-password" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone (optional)</label>
+          <input type="tel" class="form-control" id="register-phone">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+      </form>
+      <p style="text-align: center; margin-top: 1rem; color: var(--text-light);">
+        Already have an account? <a href="#" onclick="Modal.close('register-modal'); Modal.open('login-modal');" style="color: var(--primary-color);">Login</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+      <button class="modal-close">×</button>
+      <div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
+      <h2 class="modal-title">Booking Confirmed!</h2>
+      <p style="color: var(--text-light); margin-bottom: 2rem;">Your booking has been successfully confirmed. Check your email for confirmation details.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <a href="dashboard.html" class="btn btn-primary">View My Bookings</a>
+        <a href="index.html" class="btn btn-secondary">Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>TravelExplorer</h3>
+          <p>Your trusted partner for unforgettable travel experiences around the world.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <a href="index.html">Home</a>
+          <a href="destinations.html">Destinations</a>
+          <a href="dashboard.html">My Trips</a>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Info</h3>
+          <p>📧 info@travelexplorer.com</p>
+          <p>📞 +1 (555) 123-4567</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 TravelExplorer. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    let packages = [];
+    let selectedPackage = null;
+
+    // Load packages
+    async function loadPackages() {
+      try {
+        const response = await API.packages.getAll();
+        packages = response.data;
+        
+        const select = document.getElementById('package-select');
+        select.innerHTML = '<option value="">Select a package...</option>' + 
+          packages.map(pkg => `<option value="${pkg._id}">${pkg.name} - ${Utils.formatPrice(pkg.price)} (${pkg.duration} days)</option>`).join('');
+        
+        // Check if package ID is in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const packageId = urlParams.get('package');
+        if (packageId) {
+          select.value = packageId;
+          updateSelectedPackage();
+        }
+      } catch (error) {
+        console.error('Error loading packages:', error);
+        Utils.showError('Unable to load packages. Please refresh the page.');
+      }
+    }
+
+    // Update selected package
+    function updateSelectedPackage() {
+      const packageId = document.getElementById('package-select').value;
+      selectedPackage = packages.find(p => p._id === packageId);
+      
+      if (selectedPackage) {
+        document.getElementById('package-summary').style.display = 'block';
+        document.getElementById('no-package-selected').style.display = 'none';
+        
+        document.getElementById('package-image').style.backgroundImage = 
+          `url(${selectedPackage.images[0] || 'https://via.placeholder.com/400x200'})`;
+        document.getElementById('summary-package-name').textContent = selectedPackage.name;
+        document.getElementById('summary-destination').textContent = '📍 ' + selectedPackage.destination;
+        document.getElementById('summary-duration').textContent = selectedPackage.duration + ' days';
+        document.getElementById('summary-price-per-person').textContent = Utils.formatPrice(selectedPackage.price);
+        
+        document.getElementById('num-people').max = selectedPackage.maxPeople;
+        document.getElementById('max-people-hint').textContent = 
+          `Maximum ${selectedPackage.maxPeople} travelers allowed`;
+        document.getElementById('max-people-hint').style.display = 'block';
+        
+        updateSummary();
+      } else {
+        document.getElementById('package-summary').style.display = 'none';
+        document.getElementById('no-package-selected').style.display = 'block';
+      }
+    }
+
+    // Update booking summary
+    function updateSummary() {
+      if (!selectedPackage) return;
+      
+      const numPeople = parseInt(document.getElementById('num-people').value) || 1;
+      const startDate = document.getElementById('start-date').value;
+      
+      document.getElementById('summary-travelers').textContent = numPeople;
+      document.getElementById('summary-date').textContent = startDate ? 
+        Utils.formatDate(startDate) : 'Not selected';
+      
+      const total = selectedPackage.price * numPeople;
+      document.getElementById('summary-total').textContent = Utils.formatPrice(total);
+    }
+
+    // Pre-fill form with user data
+    function prefillForm() {
+      const user = Auth.getUser();
+      if (user) {
+        document.getElementById('contact-name').value = user.name || '';
+        document.getElementById('contact-email').value = user.email || '';
+        document.getElementById('contact-phone').value = user.phone || '';
+      }
+    }
+
+    // Handle booking submission
+    document.getElementById('booking-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Check if user is logged in
+      if (!Auth.isLoggedIn()) {
+        Utils.showError('Please login to complete your booking');
+        Modal.open('login-modal');
+        return;
+      }
+
+      if (!selectedPackage) {
+        Utils.showError('Please select a package');
+        return;
+      }
+
+      const numPeople = parseInt(document.getElementById('num-people').value);
+      if (numPeople > selectedPackage.maxPeople) {
+        Utils.showError(`Maximum ${selectedPackage.maxPeople} travelers allowed for this package`);
+        return;
+      }
+
+      const startDate = document.getElementById('start-date').value;
+      if (!startDate) {
+        Utils.showError('Please select a start date');
+        return;
+      }
+
+      // Check if date is in the future
+      const selectedDate = new Date(startDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (selectedDate < today) {
+        Utils.showError('Start date must be in the future');
+        return;
+      }
+
+      const bookingData = {
+        packageId: selectedPackage._id,
+        startDate,
+        numberOfPeople: numPeople,
+        contactPhone: document.getElementById('contact-phone').value,
+        contactEmail: document.getElementById('contact-email').value,
+        specialRequests: document.getElementById('special-requests').value
+      };
+
+      try {
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processing...';
+
+        const response = await API.bookings.create(bookingData);
+        
+        // Show success modal
+        Modal.open('success-modal');
+        
+        // Reset form
+        document.getElementById('booking-form').reset();
+        selectedPackage = null;
+        updateSelectedPackage();
+        
+      } catch (error) {
+        Utils.showError(error.message || 'Booking failed. Please try again.');
+      } finally {
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Complete Booking';
+      }
+    });
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPackages();
+      prefillForm();
+      
+      // Set minimum date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('start-date').min = today;
+      
+      document.getElementById('package-select').addEventListener('change', updateSelectedPackage);
+      document.getElementById('num-people').addEventListener('input', updateSummary);
+      document.getElementById('start-date').addEventListener('change', updateSummary);
+    });
+
+    // Login form
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const response = await API.auth.login({
+          email: document.getElementById('login-email').value,
+          password: document.getElementById('login-password').value
+        });
+        Auth.saveUser(response.data);
+        Modal.close('login-modal');
+        Utils.showSuccess('Login successful! You can now complete your booking.');
+        Auth.updateNavigation();
+        prefillForm();
+      } catch (error) {
+        Utils.showError(error.message || 'Login failed.');
+      }
+    });
+
+    // Register form
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const response = await API.auth.register({
+          name: document.getElementById('register-name').value,
+          email: document.getElementById('register-email').value,
+          password: document.getElementById('register-password').value,
+          phone: document.getElementById('register-phone').value
+        });
+        Auth.saveUser(response.data);
+        Modal.close('register-modal');
+        Utils.showSuccess('Registration successful! You can now complete your booking.');
+        Auth.updateNavigation();
+        prefillForm();
+      } catch (error) {
+        Utils.showError(error.message || 'Registration failed.');
+      }
+    });
+  </script>
+</body>
+</html>
