@@ -54,8 +54,8 @@ A professional full-stack travel booking system with modern UI, secure authentic
 │   │   ├── bookings.js           # Booking routes
 │   │   ├── contact.js            # Contact routes
 │   │   └── packages.js           # Package routes
-│   ├── seeds/
-│   │   └── seedData.js           # Sample data seeder
+│   ├── utils/
+│   │   └── idGenerator.js        # ID generation utility
 │   ├── .env.example              # Environment variables template
 │   ├── package.json
 │   └── server.js                 # Main server file

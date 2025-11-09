@@ -137,7 +137,7 @@ chmod +x deployment/deploy-frontend.sh
    - Submit your inquiry
 
 ### Sample Test Account
-After seeding the database, you can register your own account. There's no pre-created test account for security reasons.
+You can register your own account. There's no pre-created test account for security reasons.
 
 ### Sample Packages Available
 The server automatically loads 6 sample packages on startup:

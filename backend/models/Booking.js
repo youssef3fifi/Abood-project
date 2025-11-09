@@ -151,17 +151,7 @@ Booking.find = (filter = {}) => {
 
 Booking.findById = async (id) => {
   const booking = bookings.find(b => b._id === id) || null;
-  if (!booking) return null;
-  
-  // Return an object that supports populate
-  return {
-    ...booking,
-    _originalBooking: booking,
-    populate: async function(field) {
-      await booking.populate(field);
-      return booking;
-    }
-  };
+  return booking;
 };
 
 Booking.create = async (data) => {

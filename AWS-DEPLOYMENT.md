@@ -2,6 +2,17 @@
 
 This guide provides step-by-step instructions for deploying the TravelExplorer travel booking system on AWS EC2.
 
+## 🎉 NEW: In-Memory Storage Version Available!
+
+**Quick Setup Option**: This application now supports in-memory storage, which means:
+- ✅ No MongoDB installation required
+- ✅ Faster deployment (skip MongoDB setup steps)
+- ✅ Perfect for testing and development
+- ✅ Pre-loaded with sample data
+- ⚠️ Data resets on server restart
+
+If you want persistent storage, follow the full guide including MongoDB installation. For quick testing, you can skip the MongoDB steps (section 3.3).
+
 ## 📋 Prerequisites
 
 - AWS account with billing enabled
@@ -102,7 +113,11 @@ node -v  # Should show v18.x.x
 npm -v   # Should show npm version
 ```
 
-### 3.3 Install MongoDB
+### 3.3 Install MongoDB (OPTIONAL - Skip if using in-memory storage)
+
+**Note**: MongoDB is **optional** with the new in-memory storage version. Skip this step if you want to use in-memory storage for quick testing/development.
+
+For persistent storage with MongoDB:
 ```bash
 # Import MongoDB public GPG key
 wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
@@ -184,6 +199,17 @@ nano .env
 ```
 
 **Update the following in .env:**
+
+For **in-memory storage** (no MongoDB):
+```env
+PORT=3000
+NODE_ENV=production
+JWT_SECRET=CHANGE_THIS_TO_RANDOM_SECURE_STRING_12345
+JWT_EXPIRE=7d
+FRONTEND_URL=http://YOUR_EC2_PUBLIC_IP
+```
+
+For **MongoDB storage** (if you installed MongoDB):
 ```env
 PORT=3000
 NODE_ENV=production
@@ -200,8 +226,13 @@ node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 
 Press `Ctrl+X`, then `Y`, then `Enter` to save.
 
-### 5.3 Seed Database (Optional)
+### 5.3 Data Initialization
+
+**For in-memory storage**: Data is automatically loaded on server start (6 sample packages). No action needed!
+
+**For MongoDB storage**: Seed the database (Optional)
 ```bash
+# Only if using MongoDB and want to load sample data
 npm run seed
 ```
 
