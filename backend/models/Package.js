@@ -88,7 +88,9 @@ Package.find = async (filter = {}) => {
   }
 
   if (filter.destination) {
-    const regex = new RegExp(filter.destination.$regex || filter.destination, 'i');
+    // Escape special regex characters to prevent regex injection
+    const searchTerm = (filter.destination.$regex || filter.destination).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(searchTerm, 'i');
     results = results.filter(p => regex.test(p.destination));
   }
 

@@ -23,7 +23,8 @@ class User {
     if (this.name.length > 50) {
       throw new Error('Name cannot be more than 50 characters');
     }
-    if (!this.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
+    // Simple email validation that's safe from ReDoS attacks
+    if (!this.email || !/^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.email)) {
       throw new Error('Please provide a valid email');
     }
     if (!this.password || this.password.length < 6) {
